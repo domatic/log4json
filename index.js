@@ -51,6 +51,13 @@ const formatter = (event, config) => {
     output[config.props.category] = event.categoryName;
   }
 
+  Object.keys(config.props).forEach((prop) => {
+    const propName = config.props[prop];
+    if (event[prop] && !output[propName]) {
+      output[propName] = event[prop];
+    }
+  });
+
   return Object.assign(transform(config, event.data), output);
 };
 

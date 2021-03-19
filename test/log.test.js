@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 const jsonLayout = require('../index');
 
 const eventGeneratorWithCategory = (categoryName, ...values) => ({
@@ -7,6 +8,8 @@ const eventGeneratorWithCategory = (categoryName, ...values) => ({
   },
   categoryName,
   data: values,
+  fileName: 'foo.js',
+  lineNumber: '42',
 });
 
 const eventGenerator = (...values) => eventGeneratorWithCategory('default', ...values);
@@ -70,6 +73,26 @@ describe('log4json', () => {
     const result = JSON.parse(logger(eventGenerator('valid', undefined, null)));
     expect(result).toHaveProperty('msg', 'valid');
   });
+
+  test('should include fileNumber and lineNumber if config has them', () => {
+    const logger = jsonLayout({
+      props: {
+        category: 'category',
+        fileName: 'file',
+        lineNumber: 'line',
+        msg: 'message',
+        level: 'level',
+        ts: 'ts',
+        stack: 'error',
+      },
+    });
+    const result = JSON.parse(logger(eventGeneratorWithCategory('my-category', 'custom props', new Error('stack'))));
+
+    expect(result).toHaveProperty('file', 'foo.js');
+    expect(result).toHaveProperty('line', '42');
+    expect(result).toHaveProperty('message', 'custom props');
+  });
+
   test('should change the pre-reserved keys if the config has', () => {
     const logger = jsonLayout({
       props: {

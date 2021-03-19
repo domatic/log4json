@@ -10,7 +10,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "pretest": "npm run lint",
-    "test": "jest --runInBand --forceExit"
+    "test": "jest --runInBand --detectOpenHandles"
   },
   "author": {
     "name": "Salim KAYABASI",
