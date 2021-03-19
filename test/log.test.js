@@ -8,7 +8,7 @@ const eventGeneratorWithCategory = (categoryName, ...values) => ({
   },
   categoryName,
   data: values,
-  fileName: 'foo.js',
+  fileName: '/a/b/c/d/e/f/g/foo.js',
   lineNumber: '42',
 });
 
@@ -76,6 +76,7 @@ describe('log4json', () => {
 
   test('should include fileNumber and lineNumber if config has them', () => {
     const logger = jsonLayout({
+      filePathDepth: 2,
       props: {
         category: 'category',
         fileName: 'file',
@@ -88,7 +89,7 @@ describe('log4json', () => {
     });
     const result = JSON.parse(logger(eventGeneratorWithCategory('my-category', 'custom props', new Error('stack'))));
 
-    expect(result).toHaveProperty('file', 'foo.js');
+    expect(result).toHaveProperty('file', 'g/foo.js');
     expect(result).toHaveProperty('line', '42');
     expect(result).toHaveProperty('message', 'custom props');
   });

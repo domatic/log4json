@@ -54,7 +54,13 @@ const formatter = (event, config) => {
   Object.keys(config.props).forEach((prop) => {
     const propName = config.props[prop];
     if (event[prop] && !output[propName]) {
-      output[propName] = event[prop];
+      if (prop === 'fileName') {
+        const path = event[prop].split('/');
+        const depth = config.filePathDepth || 1;
+        output[propName] = path.slice(-depth).join('/');
+      } else {
+        output[propName] = event[prop];
+      }
     }
   });
 
